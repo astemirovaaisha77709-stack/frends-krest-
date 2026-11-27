@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="friendmod"
+version="1.0.0"
+displayName="Krestik Friend Mod"
+description='''
+Adds Krestik - a mysterious companion who stalks you for 4 days and becomes your friend when you call him in chat.
+'''
+
+[[dependencies.friendmod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.friendmod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"
