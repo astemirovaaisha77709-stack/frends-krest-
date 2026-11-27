@@ -1,0 +1,83 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '1.0.0'
+group = 'com.example.friendmod'
+
+base {
+    archivesName = 'friendmod'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                friendmod {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+            property 'forge.enabledGameTestNamespaces', 'friendmod'
+        }
+        server {
+            property 'forge.enabledGameTestNamespaces', 'friendmod'
+            args '--nogui'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version   : '1.20.1',
+            minecraft_version_range: '[1.20.1,1.21)',
+            forge_version       : '47.3.0',
+            forge_version_range : '[47,)',
+            loader_version_range: '[47,)',
+            mod_id              : 'friendmod',
+            mod_name            : 'Friend Mod',
+            mod_license         : 'All Rights Reserved',
+            mod_version         : '1.0.0',
+            mod_authors         : 'Player',
+            mod_description     : 'Companion friend mod Krestik'
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : 'friendmod',
+                'Specification-Vendor'    : 'Player',
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : 'Player'
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
